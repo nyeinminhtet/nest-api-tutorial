@@ -4,8 +4,8 @@ import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 
 import { AuthDTO } from './dto';
-import { PrismaService } from 'src/prisma/prisma.service';
-import { PrismaClientKnownRequestError } from 'generated/prisma/runtime/library';
+import { PrismaService } from '../../src/prisma/prisma.service';
+import { PrismaClientKnownRequestError } from '../../generated/prisma/runtime/library';
 
 @Injectable()
 export class AuthService {
