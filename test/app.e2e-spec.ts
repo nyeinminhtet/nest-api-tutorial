@@ -142,14 +142,88 @@ describe('App e2e', () => {
   });
 
   describe('Bookmarks', () => {
-    describe('Create Bookmarks', () => {});
+    describe('Get empty bookmark', () => {
+      it('should get empty bookmark', () => {
+        return pactum
+          .spec()
+          .get('/bookmark')
+          .withBearerToken('$S{token}')
+          .expectStatus(200)
+          .expectBody([]);
+      });
+    });
 
-    describe('Get Bookmarks', () => {});
+    describe('Create Bookmarks', () => {
+      it('should create bookmark', () => {
+        const data = {
+          title: 'Google',
+          link: 'https://www.google.com',
+        };
+        return pactum
+          .spec()
+          .post('/bookmark')
+          .withBearerToken('$S{token}')
+          .withBody(data)
+          .expectStatus(201)
+          .stores('bookmarkId', 'id');
+      });
+      it('should return 400 when title is missing ', () => {
+        const data = {
+          link: 'https://www.google.com',
+        };
+        return pactum
+          .spec()
+          .post('/bookmark')
+          .withBearerToken('$S{token}')
+          .withBody(data)
+          .expectStatus(400);
+      });
+    });
 
-    describe('Get Bookmark by id', () => {});
+    describe('Get Bookmarks', () => {
+      it('should get bookmarks', () => {
+        return pactum
+          .spec()
+          .get('/bookmark')
+          .withBearerToken('$S{token}')
+          .expectStatus(200)
+          .expectJsonLength(1);
+      });
+    });
 
-    describe('Edit Bookmarks', () => {});
+    describe('Get Bookmark by id', () => {
+      it('should get bookmark by id', () => {
+        return pactum
+          .spec()
+          .get('/bookmark/$S{bookmarkId}')
+          .withBearerToken('$S{token}')
+          .expectStatus(200);
+      });
+    });
 
-    describe('Delete Bookmarks', () => {});
+    describe('Edit Bookmarks', () => {
+      it('should edit bookmark', () => {
+        const data = {
+          description: 'Hello world',
+        };
+        return pactum
+          .spec()
+          .patch('/bookmark/$S{bookmarkId}')
+          .withBearerToken('$S{token}')
+          .withBody(data)
+          .expectStatus(200)
+          .expectBodyContains(data.description);
+      });
+    });
+
+    describe('Delete Bookmarks', () => {
+      it('should delete bookmark', () => {
+        return pactum
+          .spec()
+          .delete('/bookmark/$S{bookmarkId}')
+          .withBearerToken('$S{token}')
+          .expectStatus(204);
+      });
+    });
   });
 });
