@@ -112,11 +112,32 @@ describe('App e2e', () => {
 
   describe('User', () => {
     describe('Get Me', () => {
-      it.todo('should pass');
+      it('should get current user', () => {
+        return pactum
+          .spec()
+          .get('/user/me')
+          .withHeaders({
+            Authorization: 'Bearer $S{token}',
+          })
+          .expectStatus(200);
+      });
     });
 
     describe('Edit User', () => {
-      it.todo('should pass');
+      it('should update user', () => {
+        const data = {
+          firstName: 'Nyein',
+          email: 'nyein@gmail.com',
+        };
+        return pactum
+          .spec()
+          .patch('/user')
+          .withBearerToken('$S{token}')
+          .withBody(data)
+          .expectStatus(200)
+          .expectBodyContains(data.email)
+          .expectBodyContains(data.firstName);
+      });
     });
   });
 
